@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Email Inbox</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            display: flex;
+        }
+
+        .sidebar {
+            width: 15%;
+            height: 100vh;
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            position: fixed;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar li {
+            margin-bottom: 10px;
+        }
+
+        .sidebar a {
+            text-decoration: none;
+            color: #fff;
+        }
+
+        .content {
+            float: left;
+            width: 85%;
+            padding: 20px;
+            margin-left: 20%;
+        }
+
+        .email-list {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .email-item {
+            display: flex;
+            justify-content: space-between;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #fff;
+        }
+
+        .email-details {
+            flex: 1;
+        }
+
+        .email-time {
+            width: 30%;
+            text-align: right;
+            color: #666;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <ul>
+                <li><a href="writingemail">writing an email</a></li>
+                <li><a href="receivedemails">inbox</a></li>
+                <!-- <li><a href="draft">草稿箱</a></li> -->
+                <!-- <li><a href="trashemails">垃圾箱</a></li> -->
+                <li><a href="sentemails">sentemails</a></li>
+                <!-- <li><a href="deletedemails">已删除</a></li> -->
+                <!-- <li><a href="#">分类</a></li> -->
+                <li><a href="contacts">contacts</a></li>
+            </ul>
+        </div>
+        <div class="content">
+            <h1>sent emails</h1>
+            <!-- <div class="button-group"> -->
+            <!-- 其他按钮可以继续添加 -->
+            <!-- </div> -->
+            <ul>
+                <% emails.forEach(function(email) { %>
+                    <li class="email-item">
+                        <!-- <input type="checkbox" name="selectedEmails" value="<%= email.id %>" /> -->
+
+                        <div class="email-details">
+                            <h3>
+                                <a href="/detailedemail?emailid=<%= email.id %>">
+                                    <%= email.title %>
+                                </a>
+                            </h3>
+                            <p>
+                                <%= email.content %>
+                            </p>
+                        </div>
+                        <div class="email-time">
+                            <p>sendtime: <%= email.sent_time %>
+                            </p>
+                        </div>
+                    </li>
+                    <% }); %>
+            </ul>
+
+
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+
+<body>
+  <% trips.forEach(function(trip){ %>
+    <div>
+      <div>
+        <label>started_at: <output>
+            <%= trip.started_at %>
+          </output></label>
+      </div>
+      <div>
+        <label>Ride ID: <output>
+            <%= trip.ride_id %>
+          </output></label>
+      </div>
+    </div>
+    <hr />
+    <% }); %>
+
+
+      <footer>
+        <div>Made by Lihan Cai</div>
+      </footer>
+</body>
+
+</html>

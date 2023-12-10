@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Email Inbox</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            display: flex;
+        }
+
+        .sidebar {
+            width: 15%;
+            height: 100vh;
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            position: fixed;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar li {
+            margin-bottom: 10px;
+        }
+
+        .sidebar a {
+            text-decoration: none;
+            color: #fff;
+        }
+
+        .content {
+            float: left;
+            width: 85%;
+            padding: 20px;
+            margin-left: 20%;
+        }
+
+        .email-list {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .email-item {
+            display: flex;
+            justify-content: space-between;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #fff;
+        }
+
+        .email-details {
+            flex: 1;
+        }
+
+        .email-time {
+            width: 30%;
+            text-align: right;
+            color: #666;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <ul>
+                <li><a href="writingemail">写邮件</a></li>
+                <li><a href="receivedemails">收件箱</a></li>
+                <li><a href="draft">草稿箱</a></li>
+                <!-- <li><a href="trashemails">垃圾箱</a></li> -->
+                <li><a href="sentemails">已发送</a></li>
+                <!-- <li><a href="deletedemails">已删除</a></li> -->
+                <!-- <li><a href="#">分类</a></li> -->
+                <li><a href="contacts">通讯录</a></li>
+            </ul>
+        </div>
+        <div class="content">
+            <h1>收件箱</h1>
+        </div>
+    </div>
+
+</body>
+
+
+</html>

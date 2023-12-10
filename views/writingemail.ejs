@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Email Inbox</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            display: flex;
+        }
+
+        .sidebar {
+            width: 15%;
+            height: 100vh;
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            position: fixed;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar li {
+            margin-bottom: 10px;
+        }
+
+        .sidebar a {
+            text-decoration: none;
+            color: #fff;
+        }
+
+        .content {
+            float: left;
+            width: 85%;
+            padding: 20px;
+            margin-left: 20%;
+        }
+
+        .email-list {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .email-item {
+            display: flex;
+            justify-content: space-between;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #fff;
+        }
+
+        .email-details {
+            flex: 1;
+        }
+
+        .email-time {
+            width: 30%;
+            text-align: right;
+            color: #666;
+        }
+
+        .contacts-list {
+            background-color: #eee;
+            padding: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <ul>
+                <li><a href="writingemail">writing an email</a></li>
+                <li><a href="receivedemails">inbox</a></li>
+                <!-- <li><a href="draft">草稿箱</a></li> -->
+                <!-- <li><a href="trashemails">垃圾箱</a></li> -->
+                <li><a href="sentemails">sentemails</a></li>
+                <!-- <li><a href="deletedemails">已删除</a></li> -->
+                <!-- <li><a href="#">分类</a></li> -->
+                <li><a href="contacts">contacts</a></li>
+            </ul>
+        </div>
+        <div class="content">
+            <h2>Write an Email</h2>
+            <form method="post" action="/sendemail">
+                <div class="form-row">
+                    <label for="receiver">Receiver:</label>
+                    <input type="text" id="receiver" name="receiver">
+                </div>
+                <div class="form-row">
+                    <label for="title">Title:</label>
+                    <input type="text" id="title" name="title">
+                </div>
+                <label for="content">Content:</label>
+                <textarea id="content" name="content"></textarea>
+                <div>
+                    <button type="submit" id="sendButton">Send</button>
+                    <!-- <button id="draftButton">Save as Draft</button> -->
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <script>
+        // 前端JavaScript
+        document.addEventListener('DOMContentLoaded', function () {
+            const sendButton = document.getElementById('sendButton');
+
+            sendButton.addEventListener('click', function (event) {
+                event.preventDefault();
+
+                const formData = {
+                    receiver: document.getElementById('receiver').value,
+                    title: document.getElementById('title').value,
+                    content: document.getElementById('content').value
+                };
+
+                fetch('/sendemail', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Success:', data);
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                    });
+            });
+        });
+    </script>
+</body>
+
+</html>

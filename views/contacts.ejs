@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Email Inbox</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            display: flex;
+        }
+
+        .sidebar {
+            width: 15%;
+            height: 100vh;
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            position: fixed;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar li {
+            margin-bottom: 10px;
+        }
+
+        .sidebar a {
+            text-decoration: none;
+            color: #fff;
+        }
+
+        .content {
+            float: left;
+            width: 85%;
+            padding: 20px;
+            margin-left: 20%;
+        }
+
+        .email-list {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .email-item {
+            display: flex;
+            justify-content: space-between;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <ul>
+                <li><a href="writingemail">writing an email</a></li>
+                <li><a href="receivedemails">inbox</a></li>
+                <!-- <li><a href="draft">草稿箱</a></li> -->
+                <!-- <li><a href="trashemails">垃圾箱</a></li> -->
+                <li><a href="sentemails">sentemails</a></li>
+                <!-- <li><a href="deletedemails">已删除</a></li> -->
+                <!-- <li><a href="#">分类</a></li> -->
+                <li><a href="contacts">contacts</a></li>
+            </ul>
+        </div>
+        <div class="content">
+            <h1>Contacts</h1>
+            <div class="button-group">
+                <button id="addButton" onclick="promptToAddContact()">add a contact</button>
+            </div>
+            <ul>
+                <% contacts.forEach(function(contact) { %>
+                    <li class="email-item">
+                        <!-- 修改邮件项的复选框 -->
+                        <!-- <button id="writingemailButton" onclick="writingemail">writing an email</button> -->
+
+                        <p>
+                            <%= contact.username %>
+                        </p>
+                        <p>
+                            <%= contact.email %>
+                        </p>
+                        <p>
+                            <%= contact.phone %>
+                        </p>
+                        <p>
+                            <%= contact.address %>
+                        </p>
+                        <p>
+                            <%= contact.birthday %>
+                        </p>
+                    </li>
+                    <% }); %>
+            </ul>
+        </div>
+    </div>
+
+
+    <script>
+        // JavaScript 函数来弹出对话框并添加联系人
+        // JavaScript 函数来弹出对话框并添加联系人
+        function promptToAddContact() {
+            var contactInfo = window.prompt("Enter contact information (username, email, phone, address, birthday) separated by commas:");
+
+            if (contactInfo) {
+                var contactData = contactInfo.split(',');
+                if (contactData.length === 5) {
+                    var username = contactData[0].trim();
+                    var email = contactData[1].trim();
+                    var phone = contactData[2].trim();
+                    var address = contactData[3].trim();
+                    var birthday = contactData[4].trim();
+
+                    // 在这里可以将输入的信息添加到联系人列表中或进行其他处理
+                    // 你可以将它们添加到联系人列表中
+                } else {
+                    alert("Please enter all contact information separated by commas.");
+                }
+            }
+        }
+    </script>
+    </script>
+
+
+</body>
+
+
+</html>

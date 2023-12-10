@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Email Inbox</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            display: flex;
+        }
+
+        .sidebar {
+            width: 15%;
+            height: 100vh;
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            position: fixed;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar li {
+            margin-bottom: 10px;
+        }
+
+        .sidebar a {
+            text-decoration: none;
+            color: #fff;
+        }
+
+        .content {
+            float: left;
+            width: 85%;
+            padding: 20px;
+            margin-left: 20%;
+        }
+
+        .email-list {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .email-item {
+            display: flex;
+            justify-content: space-between;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #fff;
+        }
+
+        .email-details {
+            flex: 1;
+        }
+
+        .email-time {
+            width: 30%;
+            text-align: right;
+            color: #666;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <ul>
+                <li><a href="writingemail">写邮件</a></li>
+                <li><a href="receivedemails">收件箱</a></li>
+                <li><a href="draft">草稿箱</a></li>
+                <!-- <li><a href="trashemails">垃圾箱</a></li> -->
+                <li><a href="sentemails">已发送</a></li>
+                <!-- <li><a href="deletedemails">已删除</a></li> -->
+                <!-- <li><a href="#">分类</a></li> -->
+                <li><a href="contacts">通讯录</a></li>
+            </ul>
+        </div>
+
+        <div class="content">
+            <h1>垃圾箱</h1>
+            <div class="button-group">
+                <button id="deleteButton" onclick="deleteSelectedEmails()">删除</button>
+                <!-- 添加选择所有的复选框 -->
+                <input type="checkbox" id="selectAll" onchange="toggleSelectAll()" />
+            </div>
+            <ul>
+                <% emails.forEach(function(email) { %>
+                    <li class="email-item">
+                        <!-- 修改邮件项的复选框 -->
+                        <input type="checkbox" name="selectedEmails" value="<%= email.email_id %>" />
+
+                        <div class="email-details">
+                            <h3>
+                                <a href="/detailedemail?emailid=<%= email.email_id %>">
+                                    <%= email.title %>
+                                </a>
+                            </h3>
+                            <p>
+                                <%= email.content %>
+                            </p>
+                        </div>
+                        <div class="email-time">
+                            <p>发送时间: <%= email.sending_time %>
+                            </p>
+                        </div>
+                    </li>
+                    <% }); %>
+            </ul>
+        </div>
+    </div>
+
+
+    <script>
+        function toggleSelectAll() {
+            const selectAllCheckbox = document.getElementById('selectAll');
+            const selectedEmails = document.getElementsByName('selectedEmails');
+
+            for (const emailCheckbox of selectedEmails) {
+                emailCheckbox.checked = selectAllCheckbox.checked;
+            }
+        }
+
+        function deleteSelectedEmails() {
+            const selectedEmails = document.getElementsByName('selectedEmails');
+            const selectedEmailIds = Array.from(selectedEmails)
+                .filter(emailCheckbox => emailCheckbox.checked)
+                .map(emailCheckbox => emailCheckbox.value);
+
+            if (selectedEmailIds.length > 0) {
+                // 发送选中邮件的 ID 到后端进行删除
+                fetch('/deleteEmails', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ emailIds: selectedEmailIds }),
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // 删除成功，可以根据需要刷新页面或者更新界面
+                            alert(data.message);
+                        } else {
+                            alert(data.message);
+                        }
+                    });
+            } else {
+                alert('请选择要删除的邮件。');
+            }
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Email Details</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            display: flex;
+        }
+
+        .sidebar {
+            width: 15%;
+            height: 100vh;
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            position: fixed;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar li {
+            margin-bottom: 10px;
+        }
+
+        .sidebar a {
+            text-decoration: none;
+            color: #fff;
+        }
+
+        .content {
+            float: left;
+            width: 85%;
+            padding: 20px;
+            margin-left: 20%;
+        }
+
+        .email-details {
+            border: 1px solid #ddd;
+            padding: 10px;
+            background-color: #fff;
+        }
+
+        .email-header {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+
+        .email-info {
+            color: #666;
+            text-align: left;
+            /* 将文本左对齐 */
+        }
+
+        .email-title {
+            font-size: 24px;
+        }
+
+        .email-info {
+            color: #666;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <ul>
+                <li><a href="writingemail">writing an email</a></li>
+                <li><a href="receivedemails">inbox</a></li>
+                <!-- <li><a href="draft">草稿箱</a></li> -->
+                <!-- <li><a href="trashemails">垃圾箱</a></li> -->
+                <li><a href="sentemails">sentemails</a></li>
+                <!-- <li><a href="deletedemails">已删除</a></li> -->
+                <!-- <li><a href="#">分类</a></li> -->
+                <li><a href="contacts">contacts</a></li>
+            </ul>
+        </div>
+        <div class="content">
+            <h1>Email Details</h1>
+            <div class="button-group">
+                <button id="returnButton">return</button>
+                <!-- <button id="replyButton">reply</button> -->
+                <!-- <button id="deleteButton">delete</button> -->
+                <!-- <button id="moveButton">move</button> -->
+                <!-- 其他按钮可以继续添加 -->
+            </div>
+            <div class="email-details">
+                <div class="email-header">
+                    <div class="email-title">
+                        <%= email.title %>
+                    </div>
+                    <div class="email-info">
+                        <p>发件人: <%= email.sender_id %>
+                        </p>
+                        <p>时间: <%= email.sending_time %>
+                        </p>
+                    </div>
+                </div>
+                <div class="email-content">
+                    <p>
+                        <%= email.content %>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
