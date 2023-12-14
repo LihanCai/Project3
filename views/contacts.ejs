@@ -77,14 +77,31 @@
         <div class="content">
             <h1>Contacts</h1>
             <div class="button-group">
-                <button id="addButton" onclick="promptToAddContact()">add a contact</button>
+                <!-- <button id="addButton" onclick="toggleFormVisibility()">Add a contact</button> -->
             </div>
-            <ul>
-                <% contacts.forEach(function(contact) { %>
-                    <li class="email-item">
-                        <!-- 修改邮件项的复选框 -->
-                        <!-- <button id="writingemailButton" onclick="writingemail">writing an email</button> -->
 
+            <!-- Hidden form for adding a contact -->
+            <form id="addContactForm" style="display: none;">
+                <input type="text" id="usernameInput" placeholder="Username" required>
+                <input type="email" id="emailInput" placeholder="Email" required>
+                <input type="tel" id="phoneInput" placeholder="Phone" required>
+                <input type="text" id="addressInput" placeholder="Address" required>
+                <input type="date" id="birthdayInput" required>
+                <button type="button" onclick="submitForm()">Add Contact</button>
+            </form>
+
+            <!-- 编辑联系人的隐藏表单 -->
+            <form id="editContactForm" style="display: none;">
+                <input type="hidden" id="editContactId">
+                <input type="tel" id="editPhoneInput" placeholder="Phone" required>
+                <input type="text" id="editAddressInput" placeholder="Address" required>
+                <button type="button" onclick="submitEditForm()">Save Changes</button>
+            </form>
+
+            <!-- 联系人列表 -->
+            <ul id="contactList">
+                <% contacts.forEach(function(contact) { %>
+                    <li class="email-item" id="contact-<%= contact.id %>">
                         <p>
                             <%= contact.username %>
                         </p>
@@ -92,7 +109,7 @@
                             <%= contact.email %>
                         </p>
                         <p>
-                            <%= contact.phone %>
+                            <%= contact.cellphone %>
                         </p>
                         <p>
                             <%= contact.address %>
@@ -100,6 +117,7 @@
                         <p>
                             <%= contact.birthday %>
                         </p>
+                        <button onclick="editContact('<%= contact.id %>')">Edit</button>
                     </li>
                     <% }); %>
             </ul>
@@ -108,28 +126,71 @@
 
 
     <script>
-        // JavaScript 函数来弹出对话框并添加联系人
-        // JavaScript 函数来弹出对话框并添加联系人
-        function promptToAddContact() {
-            var contactInfo = window.prompt("Enter contact information (username, email, phone, address, birthday) separated by commas:");
+        var currentEditingId = null; // 用于跟踪当前正在编辑的联系人ID
 
-            if (contactInfo) {
-                var contactData = contactInfo.split(',');
-                if (contactData.length === 5) {
-                    var username = contactData[0].trim();
-                    var email = contactData[1].trim();
-                    var phone = contactData[2].trim();
-                    var address = contactData[3].trim();
-                    var birthday = contactData[4].trim();
+        function toggleFormVisibility() {
+            var form = document.getElementById("addContactForm");
+            form.style.display = form.style.display === "none" ? "block" : "none";
+        }
 
-                    // 在这里可以将输入的信息添加到联系人列表中或进行其他处理
-                    // 你可以将它们添加到联系人列表中
-                } else {
-                    alert("Please enter all contact information separated by commas.");
-                }
+        function editContact(contactId) {
+            var form = document.getElementById('editContactForm');
+            var isSameContact = currentEditingId === contactId;
+            // console.log(contactId)
+
+            // 获取点击的联系人的信息
+            var contactItem = document.getElementById('contact-' + contactId);
+            var contactDetails = contactItem.getElementsByTagName('p');
+
+            // 填充表单
+            document.getElementById('editPhoneInput').value = contactDetails[2].innerText;
+            document.getElementById('editAddressInput').value = contactDetails[3].innerText;
+            document.getElementById('editContactId').value = contactId;
+            // console.log(document.getElementById('editContactId').value)
+
+            // 根据是否是同一个联系人来显示或隐藏表单
+            if (form.style.display === 'block' && isSameContact) {
+                form.style.display = 'none';
+                currentEditingId = null;
+            } else {
+                form.style.display = 'block';
+                currentEditingId = contactId;
             }
         }
-    </script>
+
+
+        function submitEditForm() {
+            var contactId = document.getElementById('editContactId').value;
+            console.log(contactId);
+            var updatedContact = {
+                id: contactId,
+                phone: document.getElementById('editPhoneInput').value,
+                address: document.getElementById('editAddressInput').value,
+            };
+            fetch('/updateContact', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(updatedContact),
+            }).then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok: ' + response.statusText);
+                }
+                if (response.headers.get('content-type').indexOf('application/json') === -1) {
+                    throw new Error('Response not JSON');
+                }
+                return response.json();
+            })
+                .then(data => {
+                    console.log('Success:', data);
+                    // 更新页面上的联系人信息
+                    // 隐藏编辑表单
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+        }
     </script>
 
 
