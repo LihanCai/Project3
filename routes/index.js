@@ -1,16 +1,20 @@
 let express = require("express");
 let router = express.Router();
-const { updateContact,deleteEmails,getReceiver,sendemail,checkContacts,checksentemails,findEmail, checkDrafts, checkReceivedEmails,verifyLogin } = require("../db/dbConnector_Sqlite.js");
+const { updateContact,getReceiver,deleteEmails,loaddata,sendemail,checkContacts,checksentemails,findEmail, checkReceivedEmails,verifyLogin } = require("../db/dbConnector_Sqlite.js");
 
 /* GET home page. */
 router.get("/", async function (req, res) {
   // const trips = await getTrips();
   // console.log("route / called - trips.length", trips.length);
+  const emails = await loaddata();
+  // console.log(emails);
   res.render("login", {currentPage: 'login'});
 });
 
 // login page
-router.get('/login', function(req, res, next) {
+router.get('/login', async function(req, res, next) {
+  const emails = await loaddata();
+  // console.log(emails);
   res.render('login', {currentPage: 'login'})
 })
 
@@ -26,8 +30,7 @@ router.post('/login', async function(req, res, next) {
   const user = await verifyLogin(username, password);
   if (user) {
     // 登录成功，可以重定向到其他页面
-    req.session.userId = user.id;
-    // console.log(req.session.userId);
+    req.session.userId = user;
     res.redirect('/main');
   } else {
     // 登录失败，显示错误消息
@@ -40,7 +43,7 @@ router.get('/draft', async function(req, res, next) {
   // 查询用户的邮件
   const userid  = req.session.userId;
   const maxLength = 25;
-  // console.log(userid);
+  console.log(userid);
   // 使用数据库模块进行登录验证
   const emails = await checkDrafts(userid);
   emails.forEach((emails) => {
@@ -48,7 +51,7 @@ router.get('/draft', async function(req, res, next) {
       emails.content = emails.content.substring(0, maxLength) + '...'; // 添加省略号
     }
   });
-  // console.log(emails);
+  console.log(emails);
   // 渲染邮件页面，并将邮件数据传递给视图
   res.render('draft', {emails: emails})
 })
@@ -76,7 +79,7 @@ router.get('/receivedemails', async function(req, res, next) {
   // 查询用户的邮件
   const userid  = req.session.userId;
   const maxLength = 25;
-  console.log(userid);
+  // console.log(userid);
   // 使用数据库模块进行登录验证
   const emails = await checkReceivedEmails(userid);
   emails.forEach((email) => {
@@ -126,23 +129,6 @@ router.get('/trashemails', async function(req, res, next) {
   res.render('trashemails', {emails: emails})
 })
 
-// deletedemails page
-router.get('/deletedemails',async function(req, res, next) {
-    // 查询用户的邮件
-    const userid  = req.session.userId;
-    const maxLength = 25;
-    console.log(userid);
-    // 使用数据库模块进行登录验证
-    const emails = await checkDeletedemails(userid);
-    emails.forEach((email) => {
-      if (email.content.length > maxLength) {
-        email.content = email.content.substring(0, maxLength) + '...'; // 添加省略号
-      }
-    });
-    // console.log(emails);
-    // 渲染邮件页面，并将邮件数据传递给视图
-  res.render('deletedemails', {emails: emails})
-})
 
 // 在 index.js 中添加路由以批量删除邮件
 router.post('/deleteEmails', async function(req, res, next) {
@@ -156,7 +142,6 @@ router.post('/deleteEmails', async function(req, res, next) {
     res.send({ success: false, message: 'delete failed' });
   }
 });
-
 // folders page
 router.get('/folders',async function(req, res, next) {
   // 查询用户的邮件
@@ -174,7 +159,7 @@ router.get('/contacts',async function(req, res, next) {
   const userid  = req.session.userId;
   // 使用数据库模块进行登录验证
   const contacts = await checkContacts(userid);
-  // console.log(contacts);
+  console.log(contacts);
   // 渲染邮件页面，并将邮件数据传递给视图
   res.render('contacts', {contacts: contacts})
 })
@@ -186,13 +171,13 @@ router.post('/sendemail',async function(req, res, next) {
   // 使用数据库模块进行登录验证
   const { receiver, title, content } = req.body;
   const obj = await getReceiver(receiver);
-  const receiver_id = obj.id;
-  console.log(userid);
-  const created_time = new Date(); // 创建邮件的时间
-  const sending_time = new Date(); // 发送邮件的时间，这里假设创建和发送时间是相同的
+  const receiver_id = obj.user_id;
+  console.log(receiver_id);
+  const created_time = new Date().toISOString(); // 创建邮件的时间
+  const sending_time = new Date().toISOString(); // 发送邮件的时间，这里假设创建和发送时间是相同的
   const email = await sendemail(title, userid, created_time, sending_time, content,  receiver_id);
   // 渲染邮件页面，并将邮件数据传递给视图
-  res.json({ email: email });
+  res.render('writingemail', {currentPage: 'writingemail'})
 })
 
 router.post('/updateContact', async function(req, res, next) {
@@ -213,4 +198,3 @@ router.post('/updateContact', async function(req, res, next) {
 
 
 module.exports = router;
-
